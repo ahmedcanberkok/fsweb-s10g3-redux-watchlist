@@ -1,30 +1,23 @@
-import { movies } from "./../movies";
+import { useDispatch, useSelector } from "react-redux";
+import { removeFavorite } from "../store/actions/favoritesActions";
+import { addMovie } from "../store/actions/movieActions";
 
-export default function Movie(props) {
-  const movie = movies[props.sira];
+export default function FavMovie({ title, id }) {
+
+  const favorites = useSelector(store => store.favoritesReducer.favorites)
+  const dispatch = useDispatch();
+
+  const removeHandler = () => {
+    dispatch(addMovie(favorites.filter(item => item.id == id)[0]));
+    dispatch(removeFavorite(favorites.filter(item => item.id == id)[0]));
+  }
 
   return (
-    <div className="flex bg-white shadow-lg items-start">
-      <img src={movie.posterUrl} alt={movie.title} className="max-w-[18rem] w-2/5 block" />
-      <div className="p-8 flex flex-col gap-4 text-sm">
-        <div>
-          <h2 className="text-2xl">{movie.title}</h2>
-          <p className="italic text-sm">{movie.genres.join(', ')}</p>
-        </div>
-        <p className="">{movie.plot}</p>
-        <div className="flex flex-col sm:flex-row">
-          <span className="w-1/3 font-bold">Yönetmen</span>
-          <span className="flex-1">{movie.director}</span>
-        </div>
-        <div className="flex flex-col sm:flex-row">
-          <span className="w-1/3 font-bold">Oyuncular</span>
-          <span className="flex-1">{movie.actors}</span>
-        </div>
-        <div className="flex text-sm gap-1 justify-end">
-          <span className="block px-2 py-1 rounded-md border border-zinc-400">{movie.year}</span>
-          <span className="block px-2 py-1 rounded-md border border-zinc-400">{movie.runtime}dk</span>
-        </div>
-      </div>
+    <div className="flex p-3 pl-4 bg-white mb-2 shadow items-center group">
+      <div className="pr-4 flex-1">{title}</div>
+      <button onClick={removeHandler} className="px-3 py-2 block text-sm rounded bg-rose-700 text-white opacity-30 group-hover:opacity-100">
+        Çıkar
+      </button>
     </div>
-  )
-};
+  );
+}
